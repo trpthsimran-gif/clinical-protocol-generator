@@ -103,7 +103,7 @@ clinical-protocol-generator/
    - Sends it to GPT and displays the structured draft.
 5. **Refine** — type notes ("add pediatric dosing", "shorten this section")
    and the app re-prompts GPT with the previous draft plus your notes.
-6. **Export** — click **"📄 Export as PDF"** for a clean, read-only PDF, or
+6. **Export** — click **" Export as PDF"** for a clean, read-only PDF, or
    **"📝 Export as Word (.docx)"** for an editable document (e.g. to apply
    your institution's letterhead or track changes). Both include a review
    disclaimer footer on every export.
