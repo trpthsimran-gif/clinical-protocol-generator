@@ -1,21 +1,14 @@
-# GenAI Clinical Protocol Generator (Simple Edition)
+# GenAI Clinical Protocol Generator
 
-A simplified, runs-on-your-laptop version of a GenAI chatbot that drafts
-clinical protocols using real biomedical literature from PubMed.
+An AI-powered tool that drafts evidence-grounded clinical protocol outlines
+by retrieving real biomedical literature from PubMed and user-uploaded
+reference documents, then generating structured drafts using GPT — all
+through a simple, interactive web interface.
 
-This project intentionally swaps managed cloud infrastructure for local
-equivalents so it's easy to build, run, and *explain* — while still
-covering the same core skills.
-
-## How this maps to the original project
-
-| Original bullet | This version |
-|---|---|
-| Gemini-powered chatbot | OpenAI GPT (`gpt-4o-mini`) chatbot |
-| PubMed API integration | `pubmed_client.py` — NCBI E-utilities (free, no key) |
-| ETL with Cloud Run & Cloud Functions | `etl.py` — local Extract/Transform/Load into SQLite |
-| Prompt engineering strategies | `prompts.py` — system priming, grounding, structured output |
-| Interactive web-based interface | `app.py` — Streamlit app |
+This is a Retrieval-Augmented Generation (RAG) system: instead of relying
+on the AI's memory alone, it retrieves real, relevant documents first and
+grounds every response in that retrieved evidence — reducing hallucination
+and keeping every claim traceable back to a source.
 
 ## Architecture (full RAG pipeline)
 
@@ -32,6 +25,8 @@ Other Medical Documents ─┘                              │
                                                           ▼
                                                     Final Answer
 ```
+
+### How the pieces fit together
 
 - **PubMed articles** are retrieved via keyword search (`pubmed_client.py` + `etl.py`), then
   automatically embedded into the vector database too, so future searches can find them by meaning.
@@ -121,12 +116,12 @@ clinical-protocol-generator/
 
 ## Things you could extend later (good talking points)
 
-- (Already done — see the ChromaDB vector database section above)
-  over cached abstracts instead of exact PubMed queries.
+- Let users manually add typed notes/guidelines directly into the knowledge
+  base, as a third content source alongside PubMed and uploaded PDFs.
 - Add PDF export of the final protocol.
 - Deploy `app.py` to Streamlit Community Cloud (free) for a shareable demo link.
-- Swap the local SQLite ETL for real Cloud Run/Cloud Functions later if you
-  want to match the original cloud-native version.
+- Add metadata filtering (e.g. search only uploaded PDFs, or only PubMed)
+  using ChromaDB's built-in filtering support.
 
 ## Safety note
 
