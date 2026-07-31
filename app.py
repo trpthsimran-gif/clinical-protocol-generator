@@ -82,7 +82,7 @@ with st.sidebar:
     top_k_chunks = st.slider("Number of semantic chunks to retrieve", 1, 10, 5)
 
     st.divider()
-    st.header("📁 Knowledge Base")
+    st.header(" Knowledge Base")
     st.caption(
         "Upload clinical protocol PDFs or other medical reference documents. "
         "They'll be embedded and searchable alongside PubMed results."
@@ -90,7 +90,7 @@ with st.sidebar:
     uploaded_files = st.file_uploader(
         "Upload PDFs", type=["pdf"], accept_multiple_files=True
     )
-    if st.button("📥 Ingest uploaded documents", use_container_width=True):
+    if st.button(" Ingest uploaded documents", use_container_width=True):
         if not uploaded_files:
             st.warning("Upload at least one PDF first.")
         elif not client:
@@ -104,14 +104,14 @@ with st.sidebar:
 
     stats = index_stats()
     st.caption(
-        f"📊 Knowledge base: {stats['total_chunks']} chunks from "
+        f" Knowledge base: {stats['total_chunks']} chunks from "
         f"{stats['unique_sources']} source(s)."
     )
     if stats["sources"]:
         with st.expander("View sources"):
             for s in stats["sources"]:
                 st.text(f"• {s}")
-    if st.button("🗑️ Clear knowledge base", use_container_width=True):
+    if st.button(" Clear knowledge base", use_container_width=True):
         reset_index()
         st.success("Knowledge base cleared.")
         st.rerun()
@@ -140,9 +140,9 @@ topic = topic_raw.strip("\"'“”‘’").strip()
 
 col1, col2 = st.columns([1, 1])
 with col1:
-    fetch_clicked = st.button("🔎 Retrieve literature (ETL)", use_container_width=True)
+    fetch_clicked = st.button(" Retrieve literature (ETL)", use_container_width=True)
 with col2:
-    generate_clicked = st.button("✍️ Draft protocol", use_container_width=True)
+    generate_clicked = st.button(" Draft protocol", use_container_width=True)
 
 # --- Step 2: ETL - retrieve & clean PubMed literature (also embeds into vector DB) ---
 if fetch_clicked and topic:
@@ -154,13 +154,13 @@ if st.session_state.articles:
     best_score = max(a.get("relevance_score", 1.0) for a in st.session_state.articles)
     if best_score < 0.35:
         st.warning(
-            "⚠️ The retrieved articles don't look closely related to your topic. "
+            " The retrieved articles don't look closely related to your topic. "
             "This can happen with very rare/narrow topics, or if quote marks were "
             "typed into the search box. Review the abstracts below before drafting, "
             "or try rephrasing the topic without quotes."
         )
 
-    with st.expander("📚 Retrieved literature (from PubMed)", expanded=False):
+    with st.expander(" Retrieved literature (from PubMed)", expanded=False):
         for art in st.session_state.articles:
             score = art.get("relevance_score")
             score_label = f" — relevance: {int(score * 100)}%" if score is not None else ""
@@ -204,7 +204,7 @@ if generate_clicked:
             st.session_state.draft = response.choices[0].message.content
 
 if st.session_state.vector_chunks:
-    with st.expander("🧠 Semantically retrieved chunks (from vector database)", expanded=False):
+    with st.expander(" Semantically retrieved chunks (from vector database)", expanded=False):
         for chunk in st.session_state.vector_chunks:
             source = chunk.get("source", "unknown")
             score = chunk.get("score")
@@ -225,7 +225,7 @@ if st.session_state.draft:
     export_col1, export_col2 = st.columns(2)
     with export_col1:
         st.download_button(
-            label="📄 Export as PDF",
+            label=" Export as PDF",
             data=pdf_bytes,
             file_name=f"{safe_topic}_protocol.pdf",
             mime="application/pdf",
@@ -233,14 +233,14 @@ if st.session_state.draft:
         )
     with export_col2:
         st.download_button(
-            label="📝 Export as Word (.docx)",
+            label=" Export as Word (.docx)",
             data=docx_bytes,
             file_name=f"{safe_topic}_protocol.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             use_container_width=True,
         )
 
-    st.subheader("🔁 Refine this draft")
+    st.subheader(" Refine this draft")
     refine_notes = st.text_area(
         "Add clinician notes to refine the draft (e.g. 'add pediatric dosing', "
         "'shorten the precautions section')"
