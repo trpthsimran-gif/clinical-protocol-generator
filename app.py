@@ -40,6 +40,8 @@ from etl import run_etl, get_cached_queries
 from prompts import SYSTEM_PROMPT, build_user_prompt
 from pdf_ingest import ingest_pdf
 from vector_store import search as vector_search, index_stats, reset_index
+from pdf_export import generate_protocol_pdf
+from docx_export import generate_protocol_docx
 
 load_dotenv()
 
@@ -215,6 +217,28 @@ if st.session_state.vector_chunks:
 if st.session_state.draft:
     st.subheader("Draft Protocol")
     st.markdown(linkify_pmids(st.session_state.draft))
+
+    pdf_bytes = generate_protocol_pdf(topic or "Untitled topic", st.session_state.draft)
+    docx_bytes = generate_protocol_docx(topic or "Untitled topic", st.session_state.draft)
+    safe_topic = re.sub(r"[^a-zA-Z0-9]+", "_", (topic or "protocol")).strip("_").lower()
+
+    export_col1, export_col2 = st.columns(2)
+    with export_col1:
+        st.download_button(
+            label="📄 Export as PDF",
+            data=pdf_bytes,
+            file_name=f"{safe_topic}_protocol.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+    with export_col2:
+        st.download_button(
+            label="📝 Export as Word (.docx)",
+            data=docx_bytes,
+            file_name=f"{safe_topic}_protocol.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            use_container_width=True,
+        )
 
     st.subheader("🔁 Refine this draft")
     refine_notes = st.text_area(

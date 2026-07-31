@@ -23,7 +23,7 @@ Other Medical Documents ─┘                              │
                                                      OpenAI GPT
                                                           │
                                                           ▼
-                                                    Final Answer
+                                                    Final Answer ─► Export as PDF or Word (.docx)
 ```
 
 ### How the pieces fit together
@@ -47,6 +47,8 @@ clinical-protocol-generator/
 ├── etl.py              # Transform + Load: cleaning + SQLite cache + vector embedding
 ├── pdf_ingest.py        # Extract text from uploaded PDFs for the vector database
 ├── vector_store.py      # ChromaDB vector database: chunking, embeddings, semantic search
+├── pdf_export.py         # Converts the final draft into a downloadable PDF
+├── docx_export.py        # Converts the final draft into a downloadable Word (.docx) doc
 ├── prompts.py           # Prompt engineering (system prompt, templates)
 ├── requirements.txt
 ├── .env.example
@@ -101,6 +103,10 @@ clinical-protocol-generator/
    - Sends it to GPT and displays the structured draft.
 5. **Refine** — type notes ("add pediatric dosing", "shorten this section")
    and the app re-prompts GPT with the previous draft plus your notes.
+6. **Export** — click **"📄 Export as PDF"** for a clean, read-only PDF, or
+   **"📝 Export as Word (.docx)"** for an editable document (e.g. to apply
+   your institution's letterhead or track changes). Both include a review
+   disclaimer footer on every export.
 
 ## Why two kinds of search? (good interview talking point)
 
@@ -118,7 +124,6 @@ clinical-protocol-generator/
 
 - Let users manually add typed notes/guidelines directly into the knowledge
   base, as a third content source alongside PubMed and uploaded PDFs.
-- Add PDF export of the final protocol.
 - Deploy `app.py` to Streamlit Community Cloud (free) for a shareable demo link.
 - Add metadata filtering (e.g. search only uploaded PDFs, or only PubMed)
   using ChromaDB's built-in filtering support.
